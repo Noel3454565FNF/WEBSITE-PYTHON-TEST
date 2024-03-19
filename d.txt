@@ -1,0 +1,6 @@
+ASAS-> Connection to the ASAS MAINFRAME...
+ASAS-> SUCCESS!
+ASAS-> Asking for User Token...
+ASAS-> SUCCESS!
+ASAS-> Welcome, Site Director! to the remote Mainframe Access.
+ASAS-> EOF.
