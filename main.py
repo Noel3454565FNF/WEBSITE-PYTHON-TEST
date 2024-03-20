@@ -58,6 +58,8 @@ def WEBchoose():
         return "Welcome, Site Director, You are now connected to the ASAS Mainframe Remotly!"
     elif tempU == "LMER":
         return render_template('LMER.html')
+    elif tempU != '':
+        return render_template('employe.html')
     else:
         return "Unknown user. Please log in with valid credentials."
 
