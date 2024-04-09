@@ -1,6 +1,8 @@
 from flask import Flask, request, Response, render_template, send_file
 from email.message import EmailMessage
 import smtplib
+import json, os, signal
+import subprocess
 
 app = Flask(__name__)
 
@@ -8,6 +10,8 @@ app = Flask(__name__)
 VALID_CREDENTIALS_FILE = 'valid_credentials.txt'
 ULB2_lyrics = 'static/blocked_audio.mp3'
 
+
+#subprocess.run("ngrok tunnel --label edge=edghts_2dziYZnlfGRNEMcjxhL012llVpM http://localhost:5000", shell=True, check=True)
 Access = "nul"
 tempU = "a"
 tempP = "b"
@@ -52,13 +56,17 @@ def authenticate():
 def WEBchoose():
     global Access
     if tempU == "noel":
-        return "Welcome, Site Director, You are now connected to the ASAS Mainframe Remotely!"
-    elif tempU == "LMER":
+        Access = "Director"
+        return render_template("SiteDirector.html")
+    elif tempU == "LMER" or tempU == "BlueShark": #security team+
         Access = "Security+"
         return render_template('LMER.html')
-    elif tempU == "Jack Nyras":
-        Access = "Security+"
+    elif tempU == "Jack Nyras": # security team
+        Access = "Security"
         return render_template('employe.html')
+    elif tempU == "GreyHate": # maintenance team+
+        Access = "Maintenance+"
+        return render_template('employe.html')        
     elif tempU != '':
         Access = "employee"
         return render_template('employe.html')
@@ -89,7 +97,7 @@ def apple_touch_icon():
 @app.route('/Unstable Reactor State.html')
 def URS():
     global Access, tempU
-    if Access == "Security+" or Access == "Director" or Access == "SpatialBaseSecurity" or Access == "ASES" or tempU == "jack Nyras":
+    if Access == "Security+" or Access == "Director" or Access == "SpatialBaseSecurity" or Access == "ASES" or Access == "Maintenance+" or tempU == "jack Nyras":
         return render_template('Unstable Reactor State.html')
     elif Access == "employee":
         return render_template('ULB2.html')
@@ -105,8 +113,12 @@ def tsk():
 
 
 
-
-
+@app.route('/shutdown', methods=['GET'])
+def stopServer():
+    global Access
+    if Access == "Security+" or Access == "Director" or Access == "SpatialBaseSecurity" or Access == "ASES":
+        os.kill(os.getpid(), signal.SIGINT)
+        return jsonify({ "success": True, "message": "Server is shutting down..." })
 
 
 def ASASEMAIL():
